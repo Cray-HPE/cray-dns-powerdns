@@ -1,0 +1,64 @@
+# Please refer to https://stash.us.cray.com/projects/CLOUD/repos/cray-charts/browse/stable/cray-service/values.yaml?at=refs%2Fheads%2Fmaster
+# for more info on values you can set/override
+# Note that cray-service.containers[*].image and cray-service.initContainers[*].image map values are one of the only structures that
+# differ from the standard kubernetes container spec:
+# image:
+#   repository: ""
+#   tag: "" (default = "latest")
+#   pullPolicy: "" (default = "IfNotPresent")
+cray-service:
+  type: Deployment
+  nameOverride: cray-dns-powerdns
+  podAnnotations:
+    traffic.sidecar.istio.io/excludeOutboundPorts: "53"
+  containers:
+    - name: "cray-dns-powerdns"
+      image:
+        repository: "cray/cray-dns-powerdns"
+      command:
+        - "sh"
+        - "-c"
+        - "/bin/powerdns"
+      env:
+        - name: PDNS_GPGSQL_HOST
+          value: cray-dns-powerdns-postgres
+        - name: PDNS_GPGSQL_PORT
+          value: 5432
+        - name: PDNS_GPGSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: pdnsuser.cray-dns-powerdns-postgres.credentials
+              key: username
+        - name: PDNS_GPGSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pdnsuser.cray-dns-powerdns-postgres.credentials
+              key: password
+      ports:
+        - name: pdns-server-udp
+          containerPort: 67
+          protocol: UDP
+        - name: pdns-server-tcp
+          containerPort: 53
+          protocol: TCP
+      livenessProbe:
+        tcpSocket:
+          port: 53
+        initialDelaySeconds: 5
+        periodSeconds: 3
+      readinessProbe:
+        tcpSocket:
+          port: 53
+        initialDelaySeconds: 5
+        periodSeconds: 3
+      volumeMounts:
+  sqlCluster:
+    enabled: true
+    users:
+      pdnsuser: []
+    databases:
+      pdns: pdnsuser
+    volumeSize: 10Gi
+  service:
+    # service definitions for this chart defined manually
+    enabled: false

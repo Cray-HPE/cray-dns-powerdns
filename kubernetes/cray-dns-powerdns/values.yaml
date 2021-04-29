@@ -68,3 +68,38 @@ serviceAccount:
   create: true
   # serviceAccount.name: The name of the service account to create or use
   name: ""
+
+service:
+  loadBalancerIP:  10.92.100.85
+  externalTrafficPolicy:  Cluster
+
+powerdns:
+  api_key: false
+
+postgresql:
+  enabled: false
+
+mariadb:
+  enabled: false
+
+image:
+  repository: cray/cray-dns-powerdns
+  pullPolicy: IfNotPresent
+
+global:
+  appVersion: "" # this value will get set in the pipeline, and will be the driver for our unbound container image tag
+
+probes:
+  liveness:
+    initialDelaySeconds:  30
+    failureThreshold: 3
+    timeoutSeconds: 2
+
+  readiness:
+    initialDelaySeconds:  30
+    failureThreshold: 3
+    timeoutSeconds: 2
+
+  startup:
+    failureThreshold: 3
+    periodSeconds: 2

@@ -34,7 +34,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Common labels
 */}}
-{{- define "powerdns.labels" -}}
+{{- define "powerdns.labels" }}
 app.kubernetes.io/name: {{ include "powerdns.name" . }}
 helm.sh/chart: {{ include "powerdns.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
@@ -53,4 +53,23 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+
+{{/*
+Get an image prefix
+*/}}
+{{- define "powerdns.image-prefix" -}}
+{{- if .imagesHost -}}
+{{- printf "%s/" .imagesHost -}}
+{{- else -}}
+{{- printf "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a global for the Chart.yaml appVersion field.
+*/}}
+{{- define "powerdns.app-version" -}}
+{{- default "latest" .Values.global.appVersion | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

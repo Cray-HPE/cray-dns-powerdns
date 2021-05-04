@@ -9,10 +9,14 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   01-general-config.conf: |
-    {{ range $key, $value := .Values.powerdns.config -}}
-    {{ $key }}={{ $value }}
-    {{ end }}
-
+    config-dir=/etc/pdns
+    include-dir=/etc/pdns/conf.d
+    guardian=yes
+    loglevel=3
+    setgid=pdns
+    setuid=pdns
+    socket-dir=/var/run
+    version-string=anonymous
 
   00-api-key.conf: |
     api=yes

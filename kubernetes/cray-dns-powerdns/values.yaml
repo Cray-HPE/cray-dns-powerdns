@@ -9,6 +9,7 @@
 cray-service:
   type: Deployment
   nameOverride: cray-dns-powerdns
+  fullnameOverride: cray-dns-powerdns
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "53"
   containers:
@@ -20,20 +21,27 @@ cray-service:
         - "-c"
         - "/bin/powerdns"
       env:
-        - name: PDNS_GPGSQL_HOST
+        - name: AUTOCONF
+          value: postgres
+        - name: PGSQL_HOST
           value: cray-dns-powerdns-postgres
-        - name: PDNS_GPGSQL_PORT
-          value: 5432
-        - name: PDNS_GPGSQL_USER
+        - name: PGSQL_PORT
+          value: "5432"
+        - name: PGSQL_USER
           valueFrom:
             secretKeyRef:
               name: pdnsuser.cray-dns-powerdns-postgres.credentials
               key: username
-        - name: PDNS_GPGSQL_PASSWORD
+        - name: PGSQL_PASS
           valueFrom:
             secretKeyRef:
               name: pdnsuser.cray-dns-powerdns-postgres.credentials
               key: password
+        - name: PGSQL_DB
+          value: "pdns"
+        - name: PGSQL_DNSSEC
+          value: "yes"
+
       ports:
         - name: pdns-server-udp
           containerPort: 67
@@ -63,43 +71,11 @@ cray-service:
     # service definitions for this chart defined manually
     enabled: false
 
-serviceAccount:
-  # serviceAccount.create: Whether to create a service account or not
-  create: true
-  # serviceAccount.name: The name of the service account to create or use
-  name: ""
-
-service:
-  loadBalancerIP:  10.92.100.85
-  externalTrafficPolicy:  Cluster
-
 powerdns:
   api_key: false
 
-postgresql:
-  enabled: false
-
-mariadb:
-  enabled: false
-
-image:
-  repository: cray/cray-dns-powerdns
-  pullPolicy: IfNotPresent
-
-global:
-  appVersion: "" # this value will get set in the pipeline, and will be the driver for our unbound container image tag
-
-probes:
-  liveness:
-    initialDelaySeconds:  30
-    failureThreshold: 3
-    timeoutSeconds: 2
-
-  readiness:
-    initialDelaySeconds:  30
-    failureThreshold: 3
-    timeoutSeconds: 2
-
-  startup:
-    failureThreshold: 3
-    periodSeconds: 2
+service:
+  type: LoadBalancer
+  loadBalancerIP:  10.92.100.85
+  network: node-management
+  externalTrafficPolicy:  Cluster

@@ -35,7 +35,7 @@ case "$AUTOCONF" in
   ;;
 esac
 
-PGSQLCMD="psql --host=$PGSQL_HOST --username=$PGSQL_USER"
+PGSQLCMD="psql --host=$PGSQL_HOST --username=$PGSQL_USER $PGSQL_DB"
 SQLITECMD="sqlite3 $PDNS_GSQLITE3_DATABASE"
 
 # wait for Database come ready
@@ -70,7 +70,6 @@ case "$PDNS_LAUNCH" in
     if [[ -z "$(echo "SELECT 1 FROM pg_database WHERE datname = '$PGSQL_DB'" | $PGSQLCMD -t)" ]]; then
       echo "CREATE DATABASE $PGSQL_DB;" | $PGSQLCMD
     fi
-    PGSQLCMD="$PGSQLCMD $PGSQL_DB"
     if [[ -z "$(printf '\dt' | $PGSQLCMD -qAt)" ]]; then
       echo Initializing Database
       cat /etc/pdns/sql/schema.pgsql.sql | $PGSQLCMD

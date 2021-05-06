@@ -1,52 +1,54 @@
+{{ $baseChartValues := index .Values "cray-service" }}
+{{ $crayServiceValues := dict "Values" $baseChartValues "Chart" .Chart "Release" .Release}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "powerdns.fullname" . }}-udp
+  name: {{ include "cray-service.name" . }}-udp
   annotations:
-    metallb.universe.tf/address-pool: node-management
-    metallb.universe.tf/allow-shared-ip: {{ include "powerdns.name" . }}
-    external-dns.alpha.kubernetes.io/hostname: {{ include "powerdns.name" . }}
+    metallb.universe.tf/address-pool: {{ .Values.service.network }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}
+    cray.io/service: {{ include "cray-service.name" . }}
+    cloud.google.com/load-balancer-type: "Internal"
   labels:
-  {{ include "powerdns.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 spec:
-  type: LoadBalancer
-{{ if .Values.service.loadBalancerIP }}
+  {{ if .Values.service.type }}
+  type: {{ .Values.service.type }}
+  {{ end }}
+  {{ if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
-{{ end }}
-{{- if .Values.service.externalIPs }}
-  externalIPs:
-  {{ toYaml .Values.service.externalIPs | indent 4 }}
-{{- end }}
-{{- if (.Values.service.externalTrafficPolicy) }}
+  {{ end }}
+  {{- if (.Values.service.externalTrafficPolicy) }}
   externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
-{{- end }}
+  {{- end }}
   ports:
-  - name: dns-udp
-    port: 53
-    protocol: UDP
+    - name: dns-udp
+      port: 53
+      protocol: UDP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "powerdns.fullname" . }}-tcp
+  name: {{ include "cray-service.name" . }}-tcp
   annotations:
     metallb.universe.tf/address-pool: node-management
-    metallb.universe.tf/allow-shared-ip: {{ include "powerdns.name" . }}
-    external-dns.alpha.kubernetes.io/hostname: {{ include "powerdns.name" . }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}
+    cray.io/service: {{ include "cray-service.name" . }}
+    cloud.google.com/load-balancer-type: "Internal"
   labels:
-  {{ include "powerdns.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 spec:
-  type: LoadBalancer
+  {{ if .Values.service.type }}
+  type: {{ .Values.service.type }}
+  {{ end }}
   {{ if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{ end }}
-  {{- if .Values.service.externalIPs }}
-  externalIPs:
-  {{ toYaml .Values.service.externalIPs | indent 4 }}
-  {{- end }}
   {{- if (.Values.service.externalTrafficPolicy) }}
   externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
   {{- end }}
@@ -55,20 +57,19 @@ spec:
     port: 53
     protocol: TCP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
   {{ if (.Values.powerdns.api_key) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "powerdns.fullname" . }}-webserver
+  name: {{ include "cray-service.name" . }}-webserver
   annotations:
-    metallb.universe.tf/address-pool: node-management
-    metallb.universe.tf/allow-shared-ip: {{ include "powerdns.name" . }}
-    external-dns.alpha.kubernetes.io/hostname: {{ include "powerdns.name" . }}
+    cray.io/service: {{ include "cray-service.name" . }}
   labels:
-  {{ include "powerdns.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 spec:
   type: ClusterIP
   ports:
@@ -76,6 +77,6 @@ spec:
       targetPort: dns-webserver
       protocol: TCP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
   {{- end }}

@@ -8,4 +8,5 @@ dockerBuildPipeline {
     description = "Cray k8s authoritative DNS server using PowerDNS"
     product = "csm"
     slackNotification = ["", "", false, false, true, false]
+    githubPushRepo = "Cray-HPE/cray-dns-powerdns"
 }

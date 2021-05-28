@@ -8,16 +8,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  01-general-config.conf: |
-    config-dir=/etc/pdns
-    include-dir=/etc/pdns/conf.d
-    guardian=yes
-    loglevel=3
-    setgid=pdns
-    setuid=pdns
-    socket-dir=/var/run
-    version-string=anonymous
-
   00-api-key.conf: |
     api=yes
     {{ if .Values.powerdns.api_key }}

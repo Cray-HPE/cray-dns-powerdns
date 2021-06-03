@@ -6,4 +6,4 @@ dependencies:
     version: "^2.0.1-0"
     repository: "@cray-internal"
 home: "cloud/cray-dns-powerdns"
-version: 0.0.3
+version: 0.0.4

@@ -41,13 +41,15 @@ cray-service:
           value: "pdns"
         - name: PGSQL_DNSSEC
           value: "yes"
-
       ports:
         - name: pdns-server-udp
-          containerPort: 67
+          containerPort: 53
           protocol: UDP
         - name: pdns-server-tcp
           containerPort: 53
+          protocol: TCP
+        - name: pdns-api-tcp
+          containerPort: 8081
           protocol: TCP
       livenessProbe:
         tcpSocket:
@@ -60,6 +62,10 @@ cray-service:
         initialDelaySeconds: 5
         periodSeconds: 3
       volumeMounts:
+        - name: pdns-config
+          mountPath: "/etc/pdns/conf.d/00-api-key.conf"
+          subPath: 00-api-key.conf
+          readOnly: true
   sqlCluster:
     enabled: true
     users:
@@ -70,6 +76,10 @@ cray-service:
   service:
     # service definitions for this chart defined manually
     enabled: false
+  volumes:
+    - name: pdns-config
+      configMap:
+        name: cray-dns-powerdns
 
 powerdns:
   api_key: false

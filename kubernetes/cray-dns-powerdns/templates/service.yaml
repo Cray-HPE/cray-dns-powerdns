@@ -59,12 +59,11 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
     app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
-  {{ if (.Values.powerdns.api_key) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "cray-service.name" . }}-webserver
+  name: {{ include "cray-service.name" . }}-api
   annotations:
     cray.io/service: {{ include "cray-service.name" . }}
   labels:
@@ -74,9 +73,8 @@ spec:
   type: ClusterIP
   ports:
     - port: 8081
-      targetPort: dns-webserver
+      name: dns-api
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
     app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
-  {{- end }}

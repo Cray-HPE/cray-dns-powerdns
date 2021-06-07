@@ -3,7 +3,7 @@ description: "Kubernetes resources for cray-dns-powerdns"
 name: cray-dns-powerdns
 dependencies:
   - name: cray-service
-    version: "^2.0.1-0"
+    version: "^2.6.0-0"
     repository: "@cray-internal"
 home: "cloud/cray-dns-powerdns"
 version: 0.0.3

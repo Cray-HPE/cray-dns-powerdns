@@ -41,6 +41,11 @@ cray-service:
           value: "pdns"
         - name: PGSQL_DNSSEC
           value: "yes"
+        - name: PDNS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: cray-powerdns-credentials
+              key: api_key
       ports:
         - name: pdns-server-udp
           containerPort: 53
@@ -80,9 +85,6 @@ cray-service:
     - name: pdns-config
       configMap:
         name: cray-dns-powerdns
-
-powerdns:
-  api_key: false
 
 service:
   type: LoadBalancer

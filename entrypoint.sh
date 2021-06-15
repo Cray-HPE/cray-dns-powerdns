@@ -9,6 +9,9 @@ set -e
 # treat everything except -- as exec cmd
 [ "${1:0:2}" != "--" ] && exec "$@"
 
+# Setup the API key configuration.
+cat "api-key=$PDNS_API_KEY" > /etc/pdns/conf.d/01-api-key.conf
+
 # Add backward compatibility
 #AUTOCONF=false
 

@@ -8,13 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  00-api-key.conf: |
+  00-api.conf: |
     api=yes
-    {{ if .Values.powerdns.api_key }}
-    api-key={{ .Values.powerdns.api_key }}
-    {{ else }}
-    api-key={{ randAlphaNum 24 }}
-    {{ end }}
     webserver=yes
     # IP Address of web server to listen on
     webserver-address=0.0.0.0

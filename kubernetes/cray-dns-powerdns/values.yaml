@@ -68,8 +68,8 @@ cray-service:
         periodSeconds: 3
       volumeMounts:
         - name: pdns-config
-          mountPath: "/etc/pdns/conf.d/00-api-key.conf"
-          subPath: 00-api-key.conf
+          mountPath: "/etc/pdns/conf.d/00-api.conf"
+          subPath: 00-api.conf
           readOnly: true
   sqlCluster:
     enabled: true

@@ -87,27 +87,18 @@ cray-service:
         name: cray-dns-powerdns
 
 service:
-  type: LoadBalancer
-  loadBalancerIP:  10.92.100.85
-  network: node-management
-  externalTrafficPolicy:  Cluster
-
-# Settings for the TCP+UDP services which share a load balancer IP
-sharedIPServices:
-  customerAccess:
-    # Additional annotations to e.g., set MetalLB address pool, external hostname
-    annotations:
-      metallb.universe.tf/address-pool: customer-access-static
-      #external-dns.alpha.kubernetes.io/hostname:
-
-     # Statically assign a specific IP
-     #loadBalancerIP:
-
-  hardwareManagement:
-    # Additional annotations to e.g., set MetalLB address pool, external hostname
-    annotations:
-      metallb.universe.tf/address-pool: hardware-management
-      #external-dns.alpha.kubernetes.io/hostname:
-
-      # Statically assign a specific IP
-      #loadBalancerIP:
+  nmn:
+    type: LoadBalancer
+    loadBalancerIP:  10.92.100.85
+    network: node-management
+    externalTrafficPolicy:  Cluster
+  hmn:
+    type: LoadBalancer
+    loadBalancerIP:  10.94.100.85
+    network: hardware-management
+    externalTrafficPolicy:  Cluster
+  can:
+    type: LoadBalancer
+    #loadBalancerIP:  10.92.100.85
+    network: customer-access-static
+    externalTrafficPolicy:  Cluster

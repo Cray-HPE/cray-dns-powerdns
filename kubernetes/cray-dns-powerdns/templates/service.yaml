@@ -3,24 +3,24 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "cray-service.name" . }}-udp
+  name: {{ include "cray-service.name" . }}-nmn-udp
   annotations:
-    metallb.universe.tf/address-pool: {{ .Values.service.network }}
-    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}
+    metallb.universe.tf/address-pool: {{ .Values.service.nmn.network }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-nmn
     cray.io/service: {{ include "cray-service.name" . }}
     cloud.google.com/load-balancer-type: "Internal"
   labels:
     app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
     app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 spec:
-  {{ if .Values.service.type }}
-  type: {{ .Values.service.type }}
+  {{ if .Values.service.nmn.type }}
+  type: {{ .Values.service.nmn.type }}
   {{ end }}
-  {{ if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{ if .Values.service.nmn.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.nmn.loadBalancerIP }}
   {{ end }}
-  {{- if (.Values.service.externalTrafficPolicy) }}
-  externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
+  {{- if (.Values.service.nmn.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.nmn.externalTrafficPolicy }}"
   {{- end }}
   ports:
     - name: dns-udp
@@ -33,24 +33,142 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "cray-service.name" . }}-tcp
+  name: {{ include "cray-service.name" . }}-nmn-tcp
   annotations:
     metallb.universe.tf/address-pool: node-management
-    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-nmn
     cray.io/service: {{ include "cray-service.name" . }}
     cloud.google.com/load-balancer-type: "Internal"
   labels:
     app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
     app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
 spec:
-  {{ if .Values.service.type }}
-  type: {{ .Values.service.type }}
+  {{ if .Values.service.nmn.type }}
+  type: {{ .Values.service.nmn.type }}
   {{ end }}
-  {{ if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{ if .Values.service.nmn.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.nmn.loadBalancerIP }}
   {{ end }}
-  {{- if (.Values.service.externalTrafficPolicy) }}
-  externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
+  {{- if (.Values.service.nmn.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.nmn.externalTrafficPolicy }}"
+  {{- end }}
+  ports:
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cray-service.name" . }}-hmn-udp
+  annotations:
+    metallb.universe.tf/address-pool: {{ .Values.service.nmn.network }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-hmn
+    cray.io/service: {{ include "cray-service.name" . }}
+    cloud.google.com/load-balancer-type: "Internal"
+  labels:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+spec:
+  {{ if .Values.service.hmn.type }}
+  type: {{ .Values.service.hmn.type }}
+  {{ end }}
+  {{ if .Values.service.hmn.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.hmn.loadBalancerIP }}
+  {{ end }}
+  {{- if (.Values.service.hmn.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.hmn.externalTrafficPolicy }}"
+  {{- end }}
+  ports:
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cray-service.name" . }}-hmn-tcp
+  annotations:
+    metallb.universe.tf/address-pool: node-management
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-hmn
+    cray.io/service: {{ include "cray-service.name" . }}
+    cloud.google.com/load-balancer-type: "Internal"
+  labels:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+spec:
+  {{ if .Values.service.hmn.type }}
+  type: {{ .Values.service.hmn.type }}
+  {{ end }}
+  {{ if .Values.service.hmn.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.hmn.loadBalancerIP }}
+  {{ end }}
+  {{- if (.Values.service.hmn.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.hmn.externalTrafficPolicy }}"
+  {{- end }}
+  ports:
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cray-service.name" . }}-can-udp
+  annotations:
+    metallb.universe.tf/address-pool: {{ .Values.service.nmn.network }}
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-can
+    cray.io/service: {{ include "cray-service.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+spec:
+  {{ if .Values.service.can.type }}
+  type: {{ .Values.service.can.type }}
+  {{ end }}
+  {{ if .Values.service.can.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.can.loadBalancerIP }}
+  {{ end }}
+  {{- if (.Values.service.can.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.can.externalTrafficPolicy }}"
+  {{- end }}
+  ports:
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cray-service.name" . }}-can-tcp
+  annotations:
+    metallb.universe.tf/address-pool: node-management
+    metallb.universe.tf/allow-shared-ip: {{ include "cray-service.name" . }}-can
+    cray.io/service: {{ include "cray-service.name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
+    app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+spec:
+  {{ if .Values.service.can.type }}
+  type: {{ .Values.service.can.type }}
+  {{ end }}
+  {{ if .Values.service.can.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.can.loadBalancerIP }}
+  {{ end }}
+  {{- if (.Values.service.can.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.can.externalTrafficPolicy }}"
   {{- end }}
   ports:
   - name: dns-tcp

@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "powerdns.fullname" . }}-ext-udp
+  labels:
+{{ include "powerdns.labels" . | indent 4 }}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: {{ template "powerdns.fullname" . }}
+    {{- with .Values.sharedIPServices.customerAccess.annotations -}}
+    {{ toYaml . | nindent 4 -}}
+    {{- end }}
+spec:
+  type: LoadBalancer
+  {{- if .Values.sharedIPServices.customerAccess.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.sharedIPServices.customerAccess.loadBalancerIP }}
+  {{- end }}
+  ports:
+  - name: udp-53
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/name: cray-dns-powerdns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "powerdns.fullname" . }}-ext-tcp
+  labels:
+{{ include "powerdns.labels" . | indent 4 }}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: {{ template "powerdns.fullname" . }}
+    {{- with .Values.sharedIPServices.customerAccess.annotations -}}
+    {{ toYaml . | nindent 4 -}}
+    {{- end }}
+spec:
+  type: LoadBalancer
+  {{- if .Values.sharedIPServices.customerAccess.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.sharedIPServices.customerAccess.loadBalancerIP }}
+  {{- end }}
+  ports:
+  - name: tcp-53
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/name: cray-dns-powerdns

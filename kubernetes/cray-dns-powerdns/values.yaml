@@ -45,7 +45,7 @@ cray-service:
           valueFrom:
             secretKeyRef:
               name: cray-powerdns-credentials
-              key: api_key
+              key: pdns_api_key
       ports:
         - name: pdns-server-udp
           containerPort: 53

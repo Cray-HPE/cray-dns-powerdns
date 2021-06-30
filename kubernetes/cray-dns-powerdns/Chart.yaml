@@ -2,4 +2,4 @@ apiVersion: v1
 description: "Kubernetes resources for cray-dns-powerdns"
 name: cray-dns-powerdns
 home: "cloud/cray-dns-powerdns"
-version: 0.1.0
+version: 0.1.1

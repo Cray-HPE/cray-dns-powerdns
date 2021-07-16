@@ -16,6 +16,7 @@ cray-service:
     - name: "cray-dns-powerdns"
       image:
         repository: "cray/cray-dns-powerdns"
+        pullPolicy: Always
       command:
         - "sh"
         - "-c"
@@ -41,7 +42,7 @@ cray-service:
           value: "pdns"
         - name: PGSQL_DNSSEC
           value: "yes"
-        - name: PDNS_API_KEY
+        - name: API_KEY
           valueFrom:
             secretKeyRef:
               name: cray-powerdns-credentials
@@ -70,6 +71,10 @@ cray-service:
         - name: pdns-config
           mountPath: "/etc/pdns/conf.d/00-api.conf"
           subPath: 00-api.conf
+          readOnly: true
+        - name: pdns-config
+          mountPath: "/etc/pdns/conf.d/02-zone_transfer.conf"
+          subPath: 02-zone_transfer.conf
           readOnly: true
   sqlCluster:
     enabled: true

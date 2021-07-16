@@ -17,3 +17,7 @@ data:
     webserver-port=8081
     # Web server access is only allowed from these subnets
     webserver-allow-from=0.0.0.0/0,::/0
+
+  02-zone_transfer.conf: |
+    master=yes
+    allow-axfr-ips=0.0.0.0/0,::/0

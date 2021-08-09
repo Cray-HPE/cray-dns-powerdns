@@ -141,7 +141,7 @@ printenv | grep ^PDNS_ | cut -f2- -d_ | while read var; do
   var="${var%%=*}"
   var="$(echo $var | sed -e 's/_/-/g' | tr '[:upper:]' '[:lower:]')"
   [[ -z "$TRACE" ]] || echo "$var=$val"
-  (grep -qE "^[# ]*$var=.*" /etc/pdns/pdns.conf && sed -r -i "s#^[# ]*$var=.*#$var=$val#g" /etc/pdns/pdns.conf) || echo "$var=$val" >> /etc/pdns/pdns.conf
+  (grep -qE "^[# ]*$var=.*" /etc/pdns/conf.d/03-db-creds.conf && sed -r -i "s#^[# ]*$var=.*#$var=$val#g" /etc/pdns/conf.d/03-db-creds.conf) || echo "$var=$val" >> /etc/pdns/conf.d/03-db-creds.conf
 done
 
 # environment hygiene

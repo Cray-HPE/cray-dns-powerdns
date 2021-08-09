@@ -69,6 +69,10 @@ cray-service:
         periodSeconds: 3
       volumeMounts:
         - name: pdns-config
+          mountPath: "/etc/pdns/pdns.conf"
+          subPath: pdns.conf
+          readOnly: true
+        - name: pdns-config
           mountPath: "/etc/pdns/conf.d/00-api.conf"
           subPath: 00-api.conf
           readOnly: true

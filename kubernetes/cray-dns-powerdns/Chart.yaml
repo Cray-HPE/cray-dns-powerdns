@@ -1,5 +1,9 @@
-apiVersion: v1
+apiVersion: v2
 description: "Kubernetes resources for cray-dns-powerdns"
+dependencies:
+- name: cray-service
+  version: "^2.8.0"
+  repository: "@cray-algol60"% 
 name: cray-dns-powerdns
 home: "cloud/cray-dns-powerdns"
 version: 0.1.5

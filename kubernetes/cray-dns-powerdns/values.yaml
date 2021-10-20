@@ -18,7 +18,7 @@ cray-service:
       securityContext:
         runAsNonRoot: false
       image:
-        repository: "cray/cray-dns-powerdns"
+        repository: "artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns"
         pullPolicy: IfNotPresent
       command:
         - "sh"

@@ -19,7 +19,7 @@ cray-service:
         runAsNonRoot: false
       image:
         repository: "cray/cray-dns-powerdns"
-        pullPolicy: Always
+        pullPolicy: IfNotPresent
       command:
         - "sh"
         - "-c"

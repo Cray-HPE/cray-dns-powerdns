@@ -19,7 +19,7 @@ cray-service:
         runAsNonRoot: false
       image:
         repository: "cray/cray-dns-powerdns"
-        pullPolicy: Always
+        pullPolicy: IfNotPresent
       command:
         - "sh"
         - "-c"
@@ -109,8 +109,7 @@ service:
     loadBalancerIP:  10.94.100.85
     network: hardware-management
     externalTrafficPolicy:  Cluster
-  can:
+  cmn:
     type: LoadBalancer
-    #loadBalancerIP:  10.92.100.85
-    network: customer-access-static
+    network: customer-management-static
     externalTrafficPolicy:  Cluster

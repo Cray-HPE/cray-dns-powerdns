@@ -1,6 +1,7 @@
 NAME ?= cray-dns-powerdns
 VERSION ?= $(shell cat .version)
 
+CHART_VERSION ?= $(VERSION)
 IMAGE ?= artifactory.algol60.net/csm-docker/stable/${NAME}
 
 CHARTDIR ?= kubernetes
@@ -23,7 +24,7 @@ chart_metadata:
 		--user $(shell id -u):$(shell id -g) \
 		-v ${PWD}/${CHARTDIR}/${NAME}:/chart \
 		${CHART_METADATA_IMAGE} \
-		--version "${VERSION}" --app-version "${VERSION}" \
+		--version "${CHART_VERSION}" --app-version "${VERSION}" \
 		-i ${NAME} ${IMAGE}:${VERSION} \
 		--cray-service-globals
 	docker run --rm \
@@ -44,13 +45,13 @@ helm:
 	    $(HELM_IMAGE) \
 	    $(CMD)
 
-chart_package: ${CHARTDIR}/.packaged/${NAME}-${VERSION}.tgz
+chart_package: ${CHARTDIR}/.packaged/${NAME}-${CHART_VERSION}.tgz
 
 chart_test:
 	CMD="lint ${CHARTDIR}/${NAME}" $(MAKE) helm
 	docker run --rm -v ${PWD}/${CHARTDIR}:/apps ${HELM_UNITTEST_IMAGE} -3 ${NAME}
 
-${CHARTDIR}/.packaged/${NAME}-${VERSION}.tgz: ${CHARTDIR}/.packaged
+${CHARTDIR}/.packaged/${NAME}-${CHART_VERSION}.tgz: ${CHARTDIR}/.packaged
 	CMD="dep up ${CHARTDIR}/${NAME}" $(MAKE) helm
 	CMD="package ${CHARTDIR}/${NAME} -d ${CHARTDIR}/.packaged" $(MAKE) helm
 
@@ -60,7 +61,7 @@ ${CHARTDIR}/.packaged:
 clean:
 	$(RM) -r ${CHARTDIR}/.packaged
 
-chart_images: ${CHARTDIR}/.packaged/${NAME}-${VERSION}.tgz
+chart_images: ${CHARTDIR}/.packaged/${NAME}-${CHART_VERSION}.tgz
 	{ CMD="template release $< --dry-run --replace --dependency-update --set manager.base_domain=example.com" $(MAKE) -s helm; \
 	  echo '---' ; \
 	  CMD="show chart $<" $(MAKE) -s helm | docker run --rm -i $(YQ_IMAGE) e -N '.annotations."artifacthub.io/images"' - ; \

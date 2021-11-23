@@ -1,7 +1,7 @@
 FROM artifactory.algol60.net/docker.io/library/alpine as base
 
 ENV POWERDNS_VERSION="4.4.1" \
-    BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev" \
+    BUILD_DEPS="build-base coreutils g++ make postgresql-dev sqlite-dev curl boost-dev" \
     RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq" \
     POWERDNS_MODULES="bind gpgsql gsqlite3"
 
@@ -10,6 +10,7 @@ FROM base AS build
 RUN apk --update add $BUILD_DEPS $RUN_DEPS
 RUN curl -sSL https://downloads.powerdns.com/releases/pdns-$POWERDNS_VERSION.tar.bz2 | tar xj -C /tmp/
 WORKDIR /tmp/pdns-$POWERDNS_VERSION
+
 RUN ./configure --prefix="" --exec-prefix=/usr --sysconfdir=/etc/pdns --with-modules="$POWERDNS_MODULES"
 RUN make
 RUN DESTDIR="/pdnsbuild" make install-strip

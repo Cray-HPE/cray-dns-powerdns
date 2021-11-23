@@ -15,7 +15,7 @@ HELM_DOCS_IMAGE ?= artifactory.algol60.net/docker.io/jnorwood/helm-docs:v1.5.0
 all : image chart
 
 image:
-	docker build --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
+	docker build --no-cache --pull ${DOCKER_ARGS} --tag '${NAME}:${VERSION}' .
 
 chart: chart_metadata chart_package chart_test
 

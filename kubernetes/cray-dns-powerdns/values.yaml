@@ -12,18 +12,19 @@ cray-service:
   fullnameOverride: cray-dns-powerdns
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "53"
-  priorityClassName: "csm-high-priority-service"
+  priorityClassName: csm-high-priority-service
   containers:
-    - name: "cray-dns-powerdns"
+    cray-dns-powerdns:
+      name: cray-dns-powerdns
       securityContext:
         runAsNonRoot: false
       image:
-        repository: "artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns"
+        repository: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns
         pullPolicy: IfNotPresent
       command:
-        - "sh"
-        - "-c"
-        - "/bin/powerdns"
+        - sh
+        - -c
+        - /bin/powerdns
       env:
         - name: AUTOCONF
           value: postgres
@@ -42,9 +43,9 @@ cray-service:
               name: pdnsuser.cray-dns-powerdns-postgres.credentials
               key: password
         - name: PGSQL_DB
-          value: "pdns"
+          value: pdns
         - name: PGSQL_DNSSEC
-          value: "yes"
+          value: yes
         - name: API_KEY
           valueFrom:
             secretKeyRef:
@@ -72,15 +73,15 @@ cray-service:
         periodSeconds: 3
       volumeMounts:
         - name: pdns-config
-          mountPath: "/etc/pdns/pdns.conf"
+          mountPath: /etc/pdns/pdns.conf
           subPath: pdns.conf
           readOnly: true
         - name: pdns-config
-          mountPath: "/etc/pdns/conf.d/00-api.conf"
+          mountPath: /etc/pdns/conf.d/00-api.conf
           subPath: 00-api.conf
           readOnly: true
         - name: pdns-config
-          mountPath: "/etc/pdns/conf.d/02-zone_transfer.conf"
+          mountPath: /etc/pdns/conf.d/02-zone_transfer.conf
           subPath: 02-zone_transfer.conf
           readOnly: true
   sqlCluster:
@@ -97,19 +98,23 @@ cray-service:
     - name: pdns-config
       configMap:
         name: cray-dns-powerdns
-
 service:
   nmn:
     type: LoadBalancer
-    loadBalancerIP:  10.92.100.85
+    loadBalancerIP: 10.92.100.85
     network: node-management
-    externalTrafficPolicy:  Cluster
+    externalTrafficPolicy: Cluster
   hmn:
     type: LoadBalancer
-    loadBalancerIP:  10.94.100.85
+    loadBalancerIP: 10.94.100.85
     network: hardware-management
-    externalTrafficPolicy:  Cluster
+    externalTrafficPolicy: Cluster
   cmn:
     type: LoadBalancer
     network: customer-management-static
-    externalTrafficPolicy:  Cluster
+    externalTrafficPolicy: Cluster
+global:
+  chart:
+    name: cray-dns-powerdns
+    version: 0.2.0
+  appVersion: 0.2.0

@@ -59,7 +59,7 @@ ${CHARTDIR}/.packaged:
 	mkdir -p ${CHARTDIR}/.packaged
 
 clean:
-	$(RM) -r ${CHARTDIR}/.packaged
+	$(RM) -r ${CHARTDIR}/.packaged .helm
 
 chart_images: ${CHARTDIR}/.packaged/${NAME}-${CHART_VERSION}.tgz
 	{ CMD="template release $< --dry-run --replace --dependency-update --set manager.base_domain=example.com" $(MAKE) -s helm; \

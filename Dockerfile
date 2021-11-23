@@ -11,6 +11,7 @@ RUN apk --update add $BUILD_DEPS $RUN_DEPS
 RUN curl -sSL https://downloads.powerdns.com/releases/pdns-$POWERDNS_VERSION.tar.bz2 | tar xj -C /tmp/
 WORKDIR /tmp/pdns-$POWERDNS_VERSION
 
+RUN autoreconf --force --verbose
 RUN ./configure --prefix="" --exec-prefix=/usr --sysconfdir=/etc/pdns --with-modules="$POWERDNS_MODULES"
 RUN make
 RUN DESTDIR="/pdnsbuild" make install-strip

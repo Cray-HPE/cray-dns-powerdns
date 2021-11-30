@@ -20,6 +20,7 @@ image:
 chart: chart-metadata chart-package chart-test
 
 chart-metadata:
+	docker pull ${CHART_METADATA_IMAGE}
 	docker run --rm \
 		--user $(shell id -u):$(shell id -g) \
 		-v ${PWD}/${CHARTDIR}/${NAME}:/chart \

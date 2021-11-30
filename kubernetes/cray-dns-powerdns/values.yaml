@@ -45,7 +45,7 @@ cray-service:
         - name: PGSQL_DB
           value: pdns
         - name: PGSQL_DNSSEC
-          value: yes
+          value: "yes"
         - name: API_KEY
           valueFrom:
             secretKeyRef:
@@ -116,5 +116,5 @@ service:
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.0
-  appVersion: 0.2.0
+    version: 0.2.1
+  appVersion: 0.2.1

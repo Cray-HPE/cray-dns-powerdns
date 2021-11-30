@@ -11,13 +11,15 @@ cray-service:
   nameOverride: cray-dns-powerdns
   fullnameOverride: cray-dns-powerdns
   podAnnotations:
-    traffic.sidecar.istio.io/excludeOutboundPorts: "53"
+    traffic.sidecar.istio.io/excludeOutboundPorts: "5053"
   priorityClassName: csm-high-priority-service
   containers:
     cray-dns-powerdns:
       name: cray-dns-powerdns
       securityContext:
-        runAsNonRoot: false
+        runAsUser: 100
+        runAsGroup: 101
+        runAsNonRoot: true
       image:
         repository: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns
         pullPolicy: IfNotPresent
@@ -53,22 +55,22 @@ cray-service:
               key: pdns_api_key
       ports:
         - name: pdns-server-udp
-          containerPort: 53
+          containerPort: 50533
           protocol: UDP
         - name: pdns-server-tcp
-          containerPort: 53
+          containerPort: 50533
           protocol: TCP
         - name: pdns-api-tcp
           containerPort: 8081
           protocol: TCP
       livenessProbe:
         tcpSocket:
-          port: 53
+          port: 5053
         initialDelaySeconds: 5
         periodSeconds: 3
       readinessProbe:
         tcpSocket:
-          port: 53
+          port: 5053
         initialDelaySeconds: 5
         periodSeconds: 3
       volumeMounts:
@@ -116,5 +118,5 @@ service:
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.1
-  appVersion: 0.2.1
+    version: 0.2.2
+  appVersion: 0.2.2

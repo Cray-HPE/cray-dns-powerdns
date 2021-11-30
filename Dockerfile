@@ -23,7 +23,9 @@ COPY --from=build /pdnsbuild /
 RUN apk add $RUN_DEPS && \
     addgroup -S pdns 2>/dev/null && \
     adduser -S -D -H -h /var/empty -s /bin/false -G pdns -g pdns pdns 2>/dev/null && \
-    rm /var/cache/apk/*
+    rm /var/cache/apk/* && \
+    mkdir /var/run/pdns && \
+    chown pdns:pdns /var/run/pdns
 
 
 ENV AUTOCONF=mysql \
@@ -38,7 +40,9 @@ ENV AUTOCONF=mysql \
     SQLITE_VERSION="4.3.1" \
     SCHEMA_VERSION_TABLE="_schema_version"
 
-EXPOSE 53/tcp 53/udp 8081/tcp
+EXPOSE 5053/tcp 5053/udp 8081/tcp
 ADD pdns.conf /etc/pdns/
 ADD entrypoint.sh /bin/powerdns
+RUN chown -R pdns:pdns /etc/pdns/
+USER pdns
 ENTRYPOINT ["powerdns"]

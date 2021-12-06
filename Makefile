@@ -12,6 +12,8 @@ HELM_IMAGE ?= artifactory.algol60.net/docker.io/alpine/helm:3.7.1
 HELM_UNITTEST_IMAGE ?= artifactory.algol60.net/docker.io/quintush/helm-unittest
 HELM_DOCS_IMAGE ?= artifactory.algol60.net/docker.io/jnorwood/helm-docs:v1.5.0
 
+SHELL=/usr/bin/env bash -euo pipefail
+
 all : image chart
 
 image:
@@ -28,12 +30,7 @@ chart-metadata:
 		--version "${CHART_VERSION}" --app-version "${VERSION}" \
 		-i ${NAME} ${IMAGE}:${VERSION} \
 		--cray-service-globals
-	docker run --rm \
-		--user $(shell id -u):$(shell id -g) \
-		-v ${PWD}/${CHARTDIR}/${NAME}:/chart \
-		-w /chart \
-		${YQ_IMAGE} \
-		eval -Pi '.cray-service.containers.${NAME}.image.repository = "${IMAGE}"' values.yaml
+	sed -e 's,repository: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns,repository: $(IMAGE),g' -i "${CHARTDIR}/${NAME}/values.yaml"
 
 helm:
 	docker run --rm \
@@ -77,4 +74,5 @@ chart-gen-docs:
 	    helm-docs --chart-search-root=$(CHARTDIR)
 
 clean:
+	$(RM) ${CHARTDIR}/${NAME}/Chart.lock
 	$(RM) -r ${CHARTDIR}/.packaged .helm

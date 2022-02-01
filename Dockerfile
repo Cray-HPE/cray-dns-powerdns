@@ -1,4 +1,4 @@
-FROM artifactory.algol60.net/docker.io/library/alpine:3.13 as base
+FROM artifactory.algol60.net/docker.io/library/alpine:3.15 as base
 
 ENV POWERDNS_VERSION="4.4.1" \
     BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev" \

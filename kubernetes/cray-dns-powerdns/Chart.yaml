@@ -27,8 +27,4 @@ annotations:
   artifacthub.io/images: |
     - name: cray-dns-powerdns
       image: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns:0.2.4
-    - name: docker-kubectl
-      image: artifactory.algol60.net/csm-docker/stable/docker-kubectl:1.19.15
-    - name: postgres
-      image: artifactory.algol60.net/csm-docker/stable/docker.io/library/postgres:13.2-alpine
   artifacthub.io/license: MIT

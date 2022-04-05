@@ -118,5 +118,5 @@ service:
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.3
-  appVersion: 0.2.3
+    version: 0.2.4
+  appVersion: 0.2.4

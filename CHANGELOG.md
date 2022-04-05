@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2022-04-05
+### Added
+### Changed
+- CASMINST-4400 - Switch base container to rolling alpine3 version
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.2.3] - 2022-02-01
+### Added
+### Changed
+- CASMNET-1118 - Alpine BaseOS version update to tackle some CVEs
+### Deprecated
+### Removed
+### Fixed
+### Security
+
 ## [0.2.2] - 2021-11-30
 ### Added
 ### Changed

@@ -115,6 +115,8 @@ service:
     type: LoadBalancer
     network: customer-management-static
     externalTrafficPolicy: Cluster
+config:
+  server_name:
 global:
   chart:
     name: cray-dns-powerdns

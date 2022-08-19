@@ -18,6 +18,9 @@ data:
     socket-dir=/var/run/pdns
     version-string=anonymous
     local-port=5053
+    {{- if .Values.config.server_name }}
+    default-soa-content={{ .Values.config.server_name }} hostmaster.@ 0 10800 3600 604800 3600
+    {{- end }}
 
   00-api.conf: |
     api=yes

@@ -193,6 +193,7 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "cray-service.name" $crayServiceValues }}
     app.kubernetes.io/instance: {{ include "cray-service.name" $crayServiceValues }}
+    service: {{ include "cray-service.name" . }}-api
 spec:
   type: ClusterIP
   ports:

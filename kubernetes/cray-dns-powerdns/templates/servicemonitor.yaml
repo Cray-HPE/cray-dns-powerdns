@@ -1,0 +1,25 @@
+{{ if .Values.prometheusServiceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+  labels:
+    app: {{ include "cray-service.name" . }}-exporter
+    release: {{ .Values.prometheusServiceMonitor.release }}
+  name: {{ include "cray-service.name" . }}-exporter
+  namespace: {{ .Values.prometheusServiceMonitor.namespace }}
+spec:
+  endpoints:
+  - interval: {{ .Values.prometheusServiceMonitor.interval }}
+    port: {{ .Values.prometheusServiceMonitor.port }}
+    scheme: {{ .Values.prometheusServiceMonitor.scheme }}
+    scrapeTimeout: {{ .Values.prometheusServiceMonitor.scrapeTimeout }}
+  namespaceSelector:
+    matchNames:
+    {{- range .Values.prometheusServiceMonitor.matchNamespace }}
+    - {{ . }}
+    {{- end }}
+  selector:
+    matchLabels:
+      service: {{ include "cray-service.name" . }}-api
+{{ end }}

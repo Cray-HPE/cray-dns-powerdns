@@ -100,6 +100,16 @@ cray-service:
     - name: pdns-config
       configMap:
         name: cray-dns-powerdns
+prometheusServiceMonitor:
+  enabled: true
+  release: cray-sysmgmt-health
+  namespace: sysmgmt-health
+  matchNamespace:
+    - services
+  interval: 59s
+  scrapeTimeout: 50s
+  scheme: http
+  port: dns-api
 service:
   nmn:
     type: LoadBalancer
@@ -118,5 +128,5 @@ service:
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.5
-  appVersion: 0.2.5
+    version: 0.2.6
+  appVersion: 0.2.6

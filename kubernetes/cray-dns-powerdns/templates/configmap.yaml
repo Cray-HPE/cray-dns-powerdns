@@ -30,5 +30,5 @@ data:
     webserver-allow-from=0.0.0.0/0,::/0
 
   02-zone_transfer.conf: |
-    master=yes
+    primary=yes
     allow-axfr-ips=0.0.0.0/0,::/0

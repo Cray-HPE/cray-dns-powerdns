@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2022-12-13
+### Added
+### Changed
+- Upgrade cray-service base chart version to 8.2.x
+### Deprecated
+### Removed
+### Fixed
+### Security
+- CASMNET-1971 - Upgrade PowerDNS to a supported version
+
 ## [0.2.6] - 2022-12-07
 ### Added
 ### Changed

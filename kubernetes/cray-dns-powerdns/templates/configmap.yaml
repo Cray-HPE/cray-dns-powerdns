@@ -18,6 +18,7 @@ data:
     socket-dir=/var/run/pdns
     version-string=anonymous
     local-port=5053
+    dname-processing={{ .Values.dname.enabled }}
 
   00-api.conf: |
     api=yes

@@ -125,8 +125,10 @@ service:
     type: LoadBalancer
     network: customer-management-static
     externalTrafficPolicy: Cluster
+dname:
+  enabled: "yes"
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.8
-  appVersion: 0.2.8
+    version: 0.2.9
+  appVersion: 0.2.9

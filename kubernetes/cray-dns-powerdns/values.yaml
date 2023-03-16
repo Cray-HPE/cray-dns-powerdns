@@ -86,13 +86,6 @@ cray-service:
           mountPath: /etc/pdns/conf.d/02-zone_transfer.conf
           subPath: 02-zone_transfer.conf
           readOnly: true
-  sqlCluster:
-    enabled: true
-    users:
-      pdnsuser: []
-    databases:
-      pdns: pdnsuser
-    volumeSize: 10Gi
   service:
     # service definitions for this chart defined manually
     enabled: false
@@ -100,6 +93,18 @@ cray-service:
     - name: pdns-config
       configMap:
         name: cray-dns-powerdns
+
+cray-postgresql:
+  nameOverride: cray-dns-powerdns
+  sqlCluster:
+    enabled: true
+    instanceCount: 3
+    volumeSize: 10Gi
+    users:
+      pdnsuser: []
+    databases:
+      service_db: pdns
+
 prometheusServiceMonitor:
   enabled: true
   release: cray-sysmgmt-health
@@ -110,6 +115,7 @@ prometheusServiceMonitor:
   scrapeTimeout: 50s
   scheme: http
   port: dns-api
+
 service:
   nmn:
     type: LoadBalancer
@@ -125,10 +131,12 @@ service:
     type: LoadBalancer
     network: customer-management-static
     externalTrafficPolicy: Cluster
+
 dname:
   enabled: "yes"
+
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.2.9
-  appVersion: 0.2.9
+    version: 1.0.0
+  appVersion: 1.0.0

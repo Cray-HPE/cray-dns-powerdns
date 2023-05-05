@@ -1,8 +1,8 @@
 FROM artifactory.algol60.net/docker.io/library/alpine:3 as base
 
 ENV POWERDNS_VERSION="4.8.0-beta1" \
-    BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev" \
-    RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq" \
+    BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev lmdb-dev" \
+    RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq lmdb" \
     POWERDNS_MODULES="bind gpgsql gsqlite3 lmdb"
 
 FROM base AS build

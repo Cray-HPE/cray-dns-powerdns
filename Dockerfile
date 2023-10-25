@@ -1,9 +1,10 @@
 FROM artifactory.algol60.net/docker.io/library/alpine:3 as base
 
+
 ENV POWERDNS_VERSION="4.8.0" \
-    LIGHTNINGSTREAM_VERSION="0.4.0" \
+    LIGHTNINGSTREAM_VERSION="0.4.2" \
     BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev lmdb-dev go" \
-    RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq lmdb" \
+    RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq lmdb boost-serialization inotify-tools" \
     POWERDNS_MODULES="bind gpgsql gsqlite3 lmdb"
 
 FROM base AS build
@@ -12,7 +13,7 @@ RUN apk --update add $BUILD_DEPS $RUN_DEPS
 
 RUN curl -ksSL https://github.com/PowerDNS/lightningstream/archive/refs/tags/v$LIGHTNINGSTREAM_VERSION.tar.gz | tar xz -C /tmp/
 WORKDIR /tmp/lightningstream-$LIGHTNINGSTREAM_VERSION
-RUN ./build.sh
+RUN sh -x ./build.sh
 
 RUN curl -ksSL https://downloads.powerdns.com/releases/pdns-$POWERDNS_VERSION.tar.bz2 | tar xj -C /tmp/
 WORKDIR /tmp/pdns-$POWERDNS_VERSION
@@ -23,10 +24,17 @@ RUN DESTDIR="/pdnsbuild" make install-strip
 RUN mkdir -p /pdnsbuild/etc/pdns/conf.d /pdnsbuild/etc/pdns/sql
 RUN cp modules/gpgsqlbackend/*.sql modules/gsqlite3backend/*.sql /pdnsbuild/etc/pdns/sql/
 
+FROM artifactory.algol60.net/docker.io/library/golang:1.21-alpine AS go-build
+
+ENV DNSCONTROL_VERSION="v4.5.0"
+
+RUN GOBIN=/tmp go install github.com/StackExchange/dnscontrol/v4@$DNSCONTROL_VERSION
+
 FROM base
 
 COPY --from=build /pdnsbuild /
 COPY --from=build /tmp/lightningstream-$LIGHTNINGSTREAM_VERSION/bin/lightningstream /usr/local/bin/
+COPY --from=go-build /tmp/dnscontrol /usr/local/bin
 RUN apk add $RUN_DEPS && \
     addgroup -S pdns 2>/dev/null && \
     adduser -S -D -H -h /var/empty -s /bin/false -G pdns -g pdns pdns 2>/dev/null && \

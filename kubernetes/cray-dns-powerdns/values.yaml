@@ -13,21 +13,13 @@ cray-service:
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "5053"
   priorityClassName: csm-high-priority-service
-  volumeClaimTemplates:
-    - apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        creationTimestamp:
-        name: pdns-lmdb
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 4Gi
-        volumeMode: Filesystem
-      status:
-        phase: Pending
+  volumeClaimTemplate:
+    name: pdns-lmdb
+    resources:
+      requests:
+        storage: 4Gi
+    storageClassName: k8s-block-replicated
+    accessModes: ["ReadWriteOnce"]
   containers:
     cray-dns-powerdns:
       name: cray-dns-powerdns

@@ -7,12 +7,27 @@
 #   tag: "" (default = "latest")
 #   pullPolicy: "" (default = "IfNotPresent")
 cray-service:
-  type: Deployment
+  type: Statefulset
   nameOverride: cray-dns-powerdns
   fullnameOverride: cray-dns-powerdns
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "5053"
   priorityClassName: csm-high-priority-service
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        creationTimestamp:
+        name: pdns-lmdb
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 4Gi
+        volumeMode: Filesystem
+      status:
+        phase: Pending
   containers:
     cray-dns-powerdns:
       name: cray-dns-powerdns
@@ -86,10 +101,16 @@ cray-service:
           mountPath: /etc/pdns/conf.d/02-zone_transfer.conf
           subPath: 02-zone_transfer.conf
           readOnly: true
+        - name: pdns-lmdb
+          mountPath: /lmdb
   service:
     # service definitions for this chart defined manually
     enabled: false
   volumes:
+    - name: pdns-s3-credentials
+      secret:
+        defaultMode: 420
+        secretName: pdns-s3-credentials
     - name: pdns-config
       configMap:
         name: cray-dns-powerdns

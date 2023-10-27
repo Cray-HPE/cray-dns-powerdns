@@ -1,5 +1,5 @@
 #!/bin/sh
-while [ ! -e /lmdb/lmdb-0 ]
+while [ ! -e /lmdb/lmdb ]
 do
     echo "Waiting for LMDB to become available"
     sleep 10

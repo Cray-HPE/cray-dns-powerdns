@@ -13,6 +13,8 @@ cray-service:
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "5053"
   priorityClassName: csm-high-priority-service
+  securityContext:
+    fsGroup: 101
   volumeClaimTemplate:
     name: pdns-lmdb
     resources:

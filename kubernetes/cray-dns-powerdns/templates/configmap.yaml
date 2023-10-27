@@ -65,6 +65,11 @@ data:
         endpoint_url: ${S3_URL}
         tls:
           insecure_skip_verify: true
+      cleanup:
+        enabled: true
+        interval: 5m
+        must_keep_interval: 10m
+        remove_old_instances_interval: 168h
 
     http:
       address: ":8500"  # for status and metrics

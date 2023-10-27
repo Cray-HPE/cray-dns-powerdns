@@ -1,7 +1,7 @@
 FROM artifactory.algol60.net/docker.io/library/alpine:3 as base
 
 
-ENV POWERDNS_VERSION="4.8.0" \
+ENV POWERDNS_VERSION="4.8.1" \
     LIGHTNINGSTREAM_VERSION="0.4.2" \
     BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev lmdb-dev go" \
     RUN_DEPS="bash libpq sqlite-libs libstdc++ libgcc postgresql-client sqlite lua-dev curl curl-dev boost-program_options jq lmdb boost-serialization inotify-tools" \
@@ -58,6 +58,7 @@ ENV AUTOCONF=mysql \
 EXPOSE 5053/tcp 5053/udp 8081/tcp
 ADD pdns.conf /etc/pdns/
 ADD entrypoint.sh /bin/powerdns
+ADD startls.sh /bin/startls
 RUN chown -R pdns:pdns /etc/pdns/
 USER pdns
 ENTRYPOINT ["powerdns"]

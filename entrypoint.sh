@@ -28,6 +28,16 @@ case "$AUTOCONF" in
     export PDNS_GPGSQL_DNSSEC=${PDNS_GPGSQL_DNSSEC:-$PGSQL_DNSSEC}
     export PGPASSWORD=$PDNS_GPGSQL_PASSWORD
   ;;
+  lmdb)
+    export PDNS_LAUNCH=lmdb
+    export PDNS_LMDB_FILENAME=/lmdb/lmdb
+    export PDNS_LMDB_SHARDS=1
+    export PDNS_LMDB_RANDOM_IDS=yes
+    export PDNS_LMDB_FLAG_DELETED=yes
+    export PDNS_LMDB_MAP_SIZE=1000
+    export PDNS_ZONE_CACHE_REFRESH_INTERVAL=0
+    export PDNS_ZONE_METADATA_CACHE_TTL=0
+  ;;
   sqlite)
     export PDNS_LOAD_MODULES=$PDNS_LOAD_MODULES,libgsqlite3backend.so
     export PDNS_LAUNCH=gsqlite3

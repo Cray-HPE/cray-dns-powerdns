@@ -21,6 +21,44 @@ cray-service:
     storageClassName: k8s-block-replicated
     accessModes: ["ReadWriteOnce"]
   containers:
+    lightningstream:
+      name: lightningstream
+      command:
+        - sh
+        - -c
+        - /bin/startls
+      env:
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: access_key
+              name: sts-s3-credentials
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secret_key
+              name: sts-s3-credentials
+        - name: S3_URL
+          valueFrom:
+            secretKeyRef:
+              key: http_s3_endpoint
+              name: sts-s3-credentials
+        - name: S3_BUCKET
+          value: powerdns
+      image:
+        repository: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns
+        pullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /etc/lightningstream.yaml
+          name: pdns-config
+          readOnly: true
+          subPath: lightningstream.yaml
+        - mountPath: /lmdb
+          name: pdns-lmdb
+      securityContext:
+        runAsUser: 100
+        runAsGroup: 101
+        runAsNonRoot: true
     cray-dns-powerdns:
       name: cray-dns-powerdns
       securityContext:

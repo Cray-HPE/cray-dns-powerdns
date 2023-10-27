@@ -33,3 +33,38 @@ data:
   02-zone_transfer.conf: |
     primary=yes
     allow-axfr-ips=0.0.0.0/0,::/0
+
+  lightningstream.yaml: |
+    instance: ${HOSTNAME}
+    lmdbs:
+      main:
+        # Auth 'lmdb-filename'
+        path: /lmdb/lmdb
+        schema_tracks_changes: true
+        options:
+          no_subdir: true
+          create: true      # optional for 'main', as auth will create it on startup, if needed
+          map_size: 1000MB  # for create=true, make sure to match auth's lmdb-map-size
+      shard:
+        # Auth 'lmdb-filename' plus '-0' for the first shard
+        path: /lmdb/lmdb-0
+        schema_tracks_changes: true
+        options:
+          no_subdir: true
+          create: true      # strongly recommended for shards
+          map_size: 1000MB  # for create=true, make sure to match auth's lmdb-map-size
+
+    storage:
+      type: s3
+      options:
+        access_key: ${S3_ACCESS_KEY}
+        secret_key: ${S3_SECRET_KEY}
+        region: "default"
+        bucket: ${S3_BUCKET}
+        create_bucket: false
+        endpoint_url: ${S3_URL}
+        tls:
+          insecure_skip_verify: true
+
+    http:
+      address: ":8500"  # for status and metrics

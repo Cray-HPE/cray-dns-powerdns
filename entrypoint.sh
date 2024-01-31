@@ -15,6 +15,9 @@ echo "api-key=$API_KEY" > /etc/pdns/conf.d/01-api-key.conf
 # Add backward compatibility
 #AUTOCONF=false
 
+# Trivial function to allow comparison of database schema versions
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d\n", $1,$2,$3); }'; }
+
 # Set credentials to be imported into pdns.conf
 case "$AUTOCONF" in
   postgres)
@@ -89,7 +92,7 @@ case "$PDNS_LAUNCH" in
       # do the database upgrade
       while true; do
         current="$(echo "SELECT version FROM $SCHEMA_VERSION_TABLE ORDER BY id DESC LIMIT 1;" | $PGSQLCMD -qAt)"
-        if [ "$current" != "$PGSQL_VERSION" ]; then
+	if [ $(version $current) -lt $(version $PGSQL_VERSION) ]; then
           filename=/etc/pdns/sql/${current}_to_*_schema.pgsql.sql
           echo "Applying Update $(basename $filename)"
           $PGSQLCMD < $filename
@@ -119,7 +122,7 @@ case "$PDNS_LAUNCH" in
       # do the database upgrade
       while true; do
         current="$(echo "SELECT version FROM $SCHEMA_VERSION_TABLE ORDER BY id DESC LIMIT 1;" | $SQLITECMD)"
-        if [ "$current" != "$SQLITE_VERSION" ]; then
+	if [ $(version $current) -lt $(version $SQLITE_VERSION) ]; then
           filename=/etc/pdns/sql/${current}_to_*_schema.sqlite3.sql
           echo "Applying Update $(basename $filename)"
           $SQLITECMD < $filename

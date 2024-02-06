@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cray-dns-powerdns
-version: 0.3.0
+version: 0.3.1
 description: Kubernetes resources for cray-dns-powerdns
 keywords:
   - cray-dns-powerdns
@@ -17,7 +17,7 @@ maintainers:
   - name: dle-hpe
   - name: SeanWallace
   - name: spillerc-hpe
-appVersion: 0.3.0
+appVersion: 0.3.1
 annotations:
   artifacthub.io/changes: |
     - kind: security
@@ -29,5 +29,5 @@ annotations:
           url: https://github.com/Cray-HPE/cray-dns-powerdns/pull/9
   artifacthub.io/images: |
     - name: cray-dns-powerdns
-      image: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns:0.3.0
+      image: artifactory.algol60.net/csm-docker/stable/cray-dns-powerdns:0.3.1
   artifacthub.io/license: MIT

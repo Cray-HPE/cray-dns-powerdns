@@ -1,6 +1,6 @@
 {{ if .Values.prometheusServiceMonitor.enabled }}
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
 metadata:
   annotations:
   labels:

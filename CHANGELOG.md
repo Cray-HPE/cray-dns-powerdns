@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.2] - 2024-09-02
 ### Added
 ### Changed
-- CASMNET-2244 - Update cray-services version in cray-dns-powerdns chart
+- CASMNET-2244 - Update cray-services version in cray-dns-powerdns chart for CSM 1.6
 ### Deprecated
 ### Removed
 ### Fixed

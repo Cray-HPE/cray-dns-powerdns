@@ -142,5 +142,5 @@ dname:
 global:
   chart:
     name: cray-dns-powerdns
-    version: 0.4.2
-  appVersion: 0.4.2
+    version: 0.5.0
+  appVersion: 0.5.0

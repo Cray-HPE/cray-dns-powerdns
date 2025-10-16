@@ -22,7 +22,7 @@ cray-service:
                   operator: In
                   values:
                   - cray-dns-powerdns
-                  topologyKey: "kubernetes.io/hostname"
+            topologyKey: "kubernetes.io/hostname"
   podAnnotations:
     traffic.sidecar.istio.io/excludeOutboundPorts: "5053"
   priorityClassName: csm-high-priority-service

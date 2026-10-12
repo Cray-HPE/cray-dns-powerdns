@@ -1,5 +1,7 @@
 FROM artifactory.algol60.net/docker.io/library/alpine:3 as base
 
+RUN apk upgrade --no-cache
+
 ENV POWERDNS_VERSION="4.8.4" \
     LIGHTNINGSTREAM_VERSION="0.4.2" \
     BUILD_DEPS="g++ make postgresql-dev sqlite-dev curl boost-dev lmdb-dev go" \
